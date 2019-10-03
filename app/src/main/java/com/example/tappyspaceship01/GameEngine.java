@@ -308,7 +308,7 @@ int score = 0;
         if (personTapped.contentEquals("up")){
 
 // make player move
-            this.playerYposition = playerYposition -20;
+
             this.playerHitBox.left  = this.playerXposition;
             this.playerHitBox.top = this.playerYposition;
             this.playerHitBox.right  = this.playerXposition + this.playerImage.getWidth();
@@ -323,7 +323,7 @@ int score = 0;
         if (personTapped.contentEquals("down")){
 
 
-            this.playerYposition = playerYposition +20;
+
             this.playerHitBox.left  = this.playerXposition;
             this.playerHitBox.top = this.playerYposition;
             this.playerHitBox.right  = this.playerXposition + this.playerImage.getWidth();
@@ -505,9 +505,11 @@ int score = 0;
                 // 3. If tap is on left, racket should go left
 
                 personTapped = "up";
+                this.playerYposition = playerYposition -200;
             }
             else if (fingerYPosition > middleOfScreen) {
                 // 4. If tap is on right, racket should go right
+                this.playerYposition = playerYposition +200;
                 personTapped = "down";
             }
 
