@@ -40,7 +40,8 @@ public class GameEngine extends SurfaceView implements Runnable {
 
     //Player Image
 
-
+int lives =50;
+int score = 0;
     Player player;
     Item item;
     Bitmap playerImage;
@@ -75,6 +76,12 @@ public class GameEngine extends SurfaceView implements Runnable {
     Rect enemyThirdHitBox;
     int hitBoxThirdEnemyXPosition;
     int hitBoxThirdEnemyYPosition;
+    Bitmap enemyFourImage;
+    int enemyFourImageXPosition;
+    int enemyFourImageYPosition;
+    Rect enemyFourHitBox;
+    int hitBoxFourEnemyXPosition;
+    int hitBoxFourEnemyYPosition;
 
 
     // -----------------------------------
@@ -111,22 +118,27 @@ public class GameEngine extends SurfaceView implements Runnable {
 // enemy
 
         this.enemyOneXposition=20;
-        this.enemyOneYposition = 300;
+        this.enemyOneYposition = 120;
         this.enemyOneHitBoxXPosition = 20;
-        this.enemyOneHitBoxYPosition = 300;
+        this.enemyOneHitBoxYPosition =120;
 
 
 
 
         this.enemySecondImageXPosition=20;
-        this.enemySecondImageYPosition = 3;
+        this.enemySecondImageYPosition = 340;
         this.hitBoxSecondEnemyXPosition=20;
-        this.hitBoxSecondEnemyYPosition = 3;
+        this.hitBoxSecondEnemyYPosition = 340;
 
         this.enemyThirdImageXPosition=20;
-        this.enemyThirdImageYPosition = 597;
+        this.enemyThirdImageYPosition = 520;
         this.hitBoxThirdEnemyXPosition=20;
-        this.hitBoxThirdEnemyYPosition = 597;
+        this.hitBoxThirdEnemyYPosition = 520;
+
+        this.enemyFourImageXPosition=20;
+        this.enemyFourImageYPosition = 750;
+        this.hitBoxFourEnemyXPosition=20;
+        this.hitBoxFourEnemyYPosition = 750;
 
 
         this.playerImage = BitmapFactory.decodeResource(this.getContext().getResources(),
@@ -135,6 +147,7 @@ public class GameEngine extends SurfaceView implements Runnable {
         this.enemyOneImage = BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.poop64);
         this.enemySecondImage= BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.poop32);
         this.enemyThirdImage= BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.poop64);
+        this.enemyFourImage= BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.poop32);
         this.playerHitBox = new Rect(this.playerHitBoxXPosition,
 
 
@@ -158,6 +171,11 @@ public class GameEngine extends SurfaceView implements Runnable {
                 this.enemyThirdImageYPosition,
                 this.hitBoxThirdEnemyXPosition+enemyThirdImage.getWidth(),
                 this.hitBoxThirdEnemyYPosition+enemyThirdImage.getHeight());
+        // enemy box 4
+        this.enemyFourHitBox = new Rect(this.enemyFourImageXPosition,
+                this.enemyFourImageYPosition,
+                this.hitBoxFourEnemyXPosition+enemyFourImage.getWidth(),
+                this.hitBoxFourEnemyYPosition+enemyFourImage.getHeight());
 
 
         this.printScreenInfo();
@@ -208,7 +226,8 @@ public class GameEngine extends SurfaceView implements Runnable {
         gameThread.start();
     }
 
-
+    String palyerAction ="";
+    String personTapped="";
     // ------------------------------
     // GAME ENGINE FUNCTIONS
     // - update, draw, setFPS
@@ -246,6 +265,42 @@ public class GameEngine extends SurfaceView implements Runnable {
         this.enemyThirdHitBox.right = this.enemyThirdImageXPosition + this.enemyThirdImage.getWidth();
         this.enemyThirdHitBox.bottom = this.enemyThirdImageYPosition + this.enemyThirdImage.getHeight();
 
+        // Mobving Enemy 4 Moving
+
+        this.enemyFourImageXPosition = enemyFourImageXPosition + 25;
+        this.enemyFourHitBox.left = this.enemyFourImageXPosition;
+        this.enemyFourHitBox.top = this.enemyFourImageYPosition;
+        this.enemyFourHitBox.right = this.enemyFourImageXPosition + this.enemyFourImage.getWidth();
+        this.enemyFourHitBox.bottom = this.enemyFourImageYPosition + this.enemyFourImage.getHeight();
+
+
+        if (personTapped.contentEquals("up")){
+
+// make player move
+            this.playerYposition = playerYposition -20;
+            this.playerHitBox.left  = this.playerXposition;
+            this.playerHitBox.top = this.playerYposition;
+            this.playerHitBox.right  = this.playerXposition + this.playerImage.getWidth();
+            this.playerHitBox.bottom = this.playerYposition + this.playerImage.getHeight();
+
+
+            // this.hitBox
+
+
+        }
+
+        if (personTapped.contentEquals("down")){
+
+
+            this.playerYposition = playerYposition +15;
+            this.playerHitBox.left  = this.playerXposition;
+            this.playerHitBox.top = this.playerYposition;
+            this.playerHitBox.right  = this.playerXposition + this.playerImage.getWidth();
+            this.playerHitBox.bottom = this.playerYposition + this.playerImage.getHeight();
+
+
+        }
+
     }
 
     public void redrawSprites() {
@@ -270,12 +325,17 @@ public class GameEngine extends SurfaceView implements Runnable {
             canvas.drawBitmap(enemyOneImage,enemyOneXposition,enemyOneYposition,paintbrush);
             canvas.drawBitmap(enemySecondImage,enemySecondImageXPosition,enemySecondImageYPosition,paintbrush);
             canvas.drawBitmap(enemyThirdImage,enemyThirdImageXPosition,enemyThirdImageYPosition,paintbrush);
+            canvas.drawBitmap(enemyFourImage,enemyFourImageXPosition,enemyFourImageYPosition,paintbrush);
 
             canvas.drawRect(playerHitBox,paintbrush);
             canvas.drawRect(enemySecondHitBox,paintbrush);
             canvas.drawRect(enemyThirdHitBox,paintbrush);
             canvas.drawRect(enemyOneHitBox,paintbrush);
+            canvas.drawRect(enemyFourHitBox,paintbrush);
             //----------------
+            paintbrush.setTextSize(60);
+            paintbrush.setColor(Color.DKGRAY);
+            canvas.drawText("Lives remaining: "+lives,100,100,paintbrush);
             this.holder.unlockCanvasAndPost(canvas);
         }
     }
@@ -300,10 +360,29 @@ public class GameEngine extends SurfaceView implements Runnable {
     public boolean onTouchEvent(MotionEvent event) {
         int userAction = event.getActionMasked();
         //@TODO: What should happen when person touches the screen?
+
         if (userAction == MotionEvent.ACTION_DOWN) {
+            float fingerXpos =  event.getX();
+            float fingerYpos =  event.getY();
+            float fingerXPosition = event.getX();
+            float fingerYPosition = event.getY();
+
+            Log.d(TAG, "Person tapped the screen");
+
+            int middleOfScreen = this.screenHeight / 2;
+            if (fingerYPosition <= middleOfScreen) {
+                // 3. If tap is on left, racket should go left
+
+                personTapped = "up";
+            }
+            else if (fingerYPosition > middleOfScreen) {
+                // 4. If tap is on right, racket should go right
+                personTapped = "down";
+            }
 
         }
         else if (userAction == MotionEvent.ACTION_UP) {
+            palyerAction ="mouse_up";
 
         }
 
