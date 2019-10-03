@@ -335,7 +335,7 @@ int score = 0;
         if (playerHitBox.intersect(enemyOneHitBox)) {
 
             // UPDATE THE SCORE
-            
+
             this.lives = this.lives - 1;
 
             // remove EnemyOne
@@ -396,6 +396,31 @@ int score = 0;
 
             // remove EnemyOne
             Log.d(TAG,"RainBowHitted!");
+        }
+
+        // restart Garbage enemy
+        // enemy 3 Loop
+        if(this.enemyOneXposition >= 2000)
+        {
+
+            this.enemyOneXposition = 20;
+            this.enemyOneYposition = 120;
+            this.enemyOneHitBox.left = this.enemyOneXposition;
+            this.enemyOneHitBox.top = this.enemyOneYposition;
+            this.enemyOneHitBox.right = this.enemyOneXposition+enemyOneImage.getWidth();
+            this.enemyOneHitBox.bottom= this.enemyOneYposition+this.enemyOneImage.getHeight();
+
+        }
+        if(this.enemySecondImageXPosition >= 2000)
+        {
+
+            this.enemySecondImageXPosition = 20;
+            this.enemySecondImageYPosition = 340;
+            this.enemySecondHitBox.left = this.enemySecondImageXPosition;
+            this.enemySecondHitBox.top = this.enemySecondImageYPosition;
+            this.enemySecondHitBox.right = this.enemySecondImageXPosition+enemySecondImage.getWidth();
+            this.enemySecondHitBox.bottom= this.enemySecondImageYPosition+this.enemySecondImage.getHeight();
+
         }
 
     }
