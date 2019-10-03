@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -40,7 +41,7 @@ public class GameEngine extends SurfaceView implements Runnable {
 
     //Player Image
 
-int lives =50;
+int lives =3;
 int score = 0;
     Player player;
     Item item;
@@ -50,6 +51,16 @@ int score = 0;
     Rect playerHitBox;
     int playerHitBoxXPosition;
     int playerHitBoxYPosition;
+
+    //
+
+
+    Bitmap RainbowImage;
+    int RainbowXposition;
+    int RainbowYposition;
+    Rect RainbowHitBox;
+    int RainbowHitBoxXPosition;
+    int RainbowHitBoxYPosition;
 
     // enemy
 
@@ -111,9 +122,9 @@ int score = 0;
 //        player = new Player(context,100,100);
 
         this.playerXposition = 1500;
-        this.playerYposition = 300;
+        this.playerYposition = 730;
         this.playerHitBoxXPosition = 300;
-        this.playerHitBoxYPosition = 300;
+        this.playerHitBoxYPosition = 730;
 
 // enemy
 
@@ -122,6 +133,11 @@ int score = 0;
         this.enemyOneHitBoxXPosition = 20;
         this.enemyOneHitBoxYPosition =120;
 
+//Rainbow
+        this.RainbowXposition=20;
+        this.RainbowYposition = 120;
+        this.RainbowHitBoxXPosition = 20;
+        this.RainbowHitBoxYPosition =120;
 
 
 
@@ -148,9 +164,9 @@ int score = 0;
         this.enemySecondImage= BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.poop32);
         this.enemyThirdImage= BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.poop64);
         this.enemyFourImage= BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.poop32);
+        this.RainbowImage= BitmapFactory.decodeResource(this.getContext().getResources(),R.drawable.rainbow64);
+
         this.playerHitBox = new Rect(this.playerHitBoxXPosition,
-
-
                 this.playerHitBoxYPosition,
                 this.playerHitBoxXPosition+playerImage.getWidth(),
                 this.playerHitBoxYPosition+playerImage.getHeight());
@@ -176,6 +192,14 @@ int score = 0;
                 this.enemyFourImageYPosition,
                 this.hitBoxFourEnemyXPosition+enemyFourImage.getWidth(),
                 this.hitBoxFourEnemyYPosition+enemyFourImage.getHeight());
+
+        // rainbow Hitbox
+
+        this.RainbowHitBox = new Rect(this.RainbowXposition,
+                this.RainbowYposition,
+                this.RainbowHitBoxXPosition+RainbowImage.getWidth(),
+                this.RainbowHitBoxYPosition+RainbowImage.getHeight());
+
 
 
         this.printScreenInfo();
@@ -241,6 +265,13 @@ int score = 0;
         this.playerHitBox.right  = this.playerXposition + this.playerImage.getWidth();
         this.playerHitBox.bottom = this.playerYposition + this.playerImage.getHeight();
 
+        // moving Rainbow
+        this.RainbowXposition = this.RainbowXposition +13;
+        this.RainbowHitBox.left = this.RainbowXposition;
+        this.RainbowHitBox.top = this.RainbowYposition;
+        this.RainbowHitBox.right = this.RainbowXposition + this.RainbowImage.getWidth();
+        this.RainbowHitBox.bottom = this.RainbowYposition + this.RainbowImage.getHeight();
+
         // moving Enemy1
         this.enemyOneXposition = this.enemyOneXposition +35;
         this.enemyOneHitBox.left = this.enemyOneXposition;
@@ -292,13 +323,79 @@ int score = 0;
         if (personTapped.contentEquals("down")){
 
 
-            this.playerYposition = playerYposition +15;
+            this.playerYposition = playerYposition +20;
             this.playerHitBox.left  = this.playerXposition;
             this.playerHitBox.top = this.playerYposition;
             this.playerHitBox.right  = this.playerXposition + this.playerImage.getWidth();
             this.playerHitBox.bottom = this.playerYposition + this.playerImage.getHeight();
 
 
+        }
+
+        if (playerHitBox.intersect(enemyOneHitBox)) {
+
+            // UPDATE THE SCORE
+            
+            this.lives = this.lives - 1;
+
+            // remove EnemyOne
+            this.enemyOneXposition=2000;
+            this.enemyOneYposition = 2000;
+            this.enemyOneHitBoxXPosition = 2000;
+            this.enemyOneHitBoxYPosition =2000;
+            Log.d(TAG,"EnemyOneHitted!");
+        }
+        if (playerHitBox.intersect(enemySecondHitBox)) {
+
+            // UPDATE THE SCORE
+
+            this.lives = this.lives - 1;
+
+            // remove EnemyOne
+            this.enemySecondImageXPosition=2000;
+            this.enemySecondImageYPosition = 2000;
+            this.hitBoxSecondEnemyXPosition=2000;
+            this.hitBoxSecondEnemyYPosition = 2000;
+            Log.d(TAG,"EnemyTwoHitted!");
+        }
+
+        if (playerHitBox.intersect(enemyThirdHitBox)) {
+
+            // UPDATE THE SCORE
+
+            this.lives = this.lives - 1;
+
+            // remove EnemyOne
+            this.enemyThirdImageXPosition=2000;
+            this.enemyThirdImageYPosition = 2000;
+            this.hitBoxThirdEnemyXPosition=2000;
+            this.hitBoxThirdEnemyYPosition = 2000;
+            Log.d(TAG,"EnemyThirdHitted!");
+        }
+
+        if (playerHitBox.intersect(enemyFourHitBox)) {
+
+            // UPDATE THE SCORE
+
+            this.lives = this.lives - 1;
+
+            // remove EnemyOne
+            this.enemyFourImageXPosition=2000;
+            this.enemyFourImageYPosition = 2000;
+            this.hitBoxFourEnemyXPosition=2000;
+            this.hitBoxFourEnemyYPosition = 2000;
+            Log.d(TAG,"EnemyFourHitted!");
+        }
+
+
+        if (playerHitBox.intersect(RainbowHitBox)) {
+
+            // UPDATE THE SCORE
+            this.score = this.score + 1;
+
+
+            // remove EnemyOne
+            Log.d(TAG,"RainBowHitted!");
         }
 
     }
@@ -322,20 +419,29 @@ int score = 0;
             paintbrush.setStrokeWidth(5);
 
             canvas.drawBitmap(playerImage, playerXposition, playerYposition, paintbrush);
+            // rainbow image
+            canvas.drawBitmap(RainbowImage, RainbowXposition, RainbowYposition, paintbrush);
             canvas.drawBitmap(enemyOneImage,enemyOneXposition,enemyOneYposition,paintbrush);
             canvas.drawBitmap(enemySecondImage,enemySecondImageXPosition,enemySecondImageYPosition,paintbrush);
             canvas.drawBitmap(enemyThirdImage,enemyThirdImageXPosition,enemyThirdImageYPosition,paintbrush);
             canvas.drawBitmap(enemyFourImage,enemyFourImageXPosition,enemyFourImageYPosition,paintbrush);
 
             canvas.drawRect(playerHitBox,paintbrush);
+            // rainbow hitbox
+            canvas.drawRect(RainbowHitBox,paintbrush);
+
             canvas.drawRect(enemySecondHitBox,paintbrush);
             canvas.drawRect(enemyThirdHitBox,paintbrush);
             canvas.drawRect(enemyOneHitBox,paintbrush);
             canvas.drawRect(enemyFourHitBox,paintbrush);
             //----------------
-            paintbrush.setTextSize(60);
+            paintbrush.setTextSize(50);
             paintbrush.setColor(Color.DKGRAY);
-            canvas.drawText("Lives remaining: "+lives,100,100,paintbrush);
+            canvas.drawText("Lives: "+lives,100,100,paintbrush);
+            paintbrush.setTextSize(50);
+            paintbrush.setColor(Color.MAGENTA);
+            canvas.drawText("Scores: "+score,1300,100,paintbrush);
+
             this.holder.unlockCanvasAndPost(canvas);
         }
     }
